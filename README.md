@@ -16,21 +16,22 @@ DENIRO is a Baxter robot which belongs to the Design Engineering department at I
 ## Contents
 ### 01 Working with DENIRO
 
-> **Milestone 01 - Setting up DENIRO & Worsktation**
-> - [ ] Task 1
+> **Setting up DENIRO & Worsktation**
+> - [ ] blabla
 > - [ ] Task 2
 > - [ ] Task 3
 
-> **Milestone 02 - Running the Pick and Place Demo**
-> - [ ] Task 1
-> - [ ] Task 2
-> - [ ] Task 3
+> **Milestone 01 - Running the Pick and Place Demo with the Brick**
+> - [ ] Running demo to pick and place the block
+> - [ ] Editing the code to spawn the brick instead of a block
+> - [ ] Challenges when running the demo to pick and place the brick
+>   - [ ] Solving the brick CoM issue
+>   - [ ] Brick orientation and URDF values & Gripper width
 
-> **Milestone 03 - Editing the Code Scripts**
-> - [ ] Spawning a brick / Solving the CoM issue
-> - [ ] Task 2
-> - [ ] Task 3
-
+> **Milestone 02 - Editing the Code Scripts**
+> - [ ] Understanding the Pick and Place scripts
+> - [ ] Friction - Collision sensitivity in brick (?)
+> - [ ] Quaternion - Mapping the cartesian space to the joint space / Finding the right quaternion
 
 ### 02 Project Specifications and Requirements
 
@@ -44,9 +45,9 @@ DENIRO is a Baxter robot which belongs to the Design Engineering department at I
 > **Trial 01 - Using MoveIt with the RViz & Gazebo Implementation**
 > - [ ] Introduction to MoveIt
 > - [ ] Running the Pick and Place demo in RViz
-> - [ ] Error with the demo execution in Gazebo
+> - [ ] Error when executing the RViz trajectory in Gazebo
 > - [ ] Debugging
-> - [ ] Exploring possible solutions
+> - [ ] Exploring possible solutions / Giving up on MoveIt
 
 > **Trial 02 - New IK Python Code**
 > - [ ] Task 1
