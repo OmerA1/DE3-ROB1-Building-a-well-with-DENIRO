@@ -51,7 +51,7 @@ DENIRO is a Baxter robot which belongs to the Design Engineering department at I
 > **Trial 02 - New IK Python Code**
 > - [ ] Task 1
 > - [ ] Task 2
-> - [ ] Task 3
+> - [ ] [Redundancy Reduction & Pseudoinverse Jacobian](https://github.com/pz716/DE3-ROB1-Building-a-well-with-DENIRO/wiki/03_3_C---Redundancy-Reduction)
 
 ### 04 Project Management
 
