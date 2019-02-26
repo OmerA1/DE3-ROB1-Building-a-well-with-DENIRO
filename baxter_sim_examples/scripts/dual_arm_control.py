@@ -330,8 +330,11 @@ class PickAndPlace(object):
 
         self._guarded_move_to_joint_position(joint_angles)
 
-
-
+		
+	def move_to(self,pose):
+	
+		self._servo_to_pose(pose)
+	
     def pick(self, pose):
 
         # open the gripper
@@ -636,13 +639,14 @@ def main():
 
 
 
-    limb = 'left'
+    left_arm = 'left'
+	right_arm = 'right'
 
     hover_distance = 0.10# meters
 
     # Starting Joint angles for left arm
 
-    starting_joint_angles = {'left_w0': 0.6699952259595108,
+    left_starting_joint= {'left_w0': 0.6699952259595108,
 
                              'left_w1': 1.030009435085784,
 
@@ -655,8 +659,24 @@ def main():
                              'left_s0': -0.08000397926829805+0.5,
 
                              'left_s1': -0.9999781166910306-0.5}
+	
+	right_starting_joint= {'right_w0': 0.6699952259595108,
 
-    pnp = PickAndPlace(limb, hover_distance)
+                             'right_w1': 1.030009435085784,
+
+                             'right_w2': -0.4999997247485215,
+
+                             'right_e0': -1.189968899785275,
+
+                             'right_e1': 1.9400238130755056,
+
+                             'right_s0': -0.08000397926829805+0.5,
+
+                             'right_s1': -0.9999781166910306-0.5}
+
+
+    pnp_l = PickAndPlace(left_arm, hover_distance)
+	pnp_r = PickAndPlace(right_arm, hover_distance)
 
 
 
@@ -675,6 +695,7 @@ def main():
                              z=0.00737916180073,
 
                              w=0.00486450832011)
+	#left RPY: (x=-179.282, y=5.615, z= 177.089)
 
     #orig = np.array([0.0249590815779,0.999649402929,0.00737916180073,0.00486450832011])
 
