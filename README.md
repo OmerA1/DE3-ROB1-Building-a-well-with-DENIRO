@@ -40,12 +40,13 @@ DENIRO is a Baxter robot which belongs to the Design Engineering department at I
 
 > **Milestone 04 - Building a Well Optimised (Iteration 2)**
 > - [ ] Image Perception for the Spawn Location
-> - [ ] Enhancing Motion Planning
->   - [ ] Order of Brick Placement to Avoid Collisions
->   - [ ] Curvature in the Motion Planning
+> - [ ] Enhancing Motion Planning: Curvature in the Motion Planning
 > - [ ] Enhancing Speed: Simultaneous Placement of Bricks
 > - [ ] Error Detection and Failure Recovery: Force Sensing
 > - [ ] Redundancy Reduction
+> - [ ] Solving Issues from Iteration 1
+>   - [ ] Order of Brick Placement to Avoid Collisions
+>   - [ ] Solving Overshooting when Moving to the Spawn Location
 
 ### 02 Project Specifications and Requirements
 
