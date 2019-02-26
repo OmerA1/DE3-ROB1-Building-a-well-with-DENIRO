@@ -36,7 +36,6 @@ DENIRO is a Baxter robot which belongs to the Design Engineering department at I
 > **Milestone 03 - Building a Well using DENIRO (Iteration 1)**
 > - [ ] Well Plan and Brick Positions
 > - [ ] IK Motion Planning
-> - [ ] 
 
 > **Milestone 04 - Building a Well Optimised (Iteration 2)**
 > - [ ] Image Perception for the Spawn Location
