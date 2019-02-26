@@ -28,10 +28,24 @@ DENIRO is a Baxter robot which belongs to the Design Engineering department at I
 >   - [ ] Solving the brick CoM issue
 >   - [ ] Brick orientation and URDF values & Gripper width
 
-> **Milestone 02 - Editing the Code Scripts**
+> **Milestone 02 - Editing the Code Scripts to Simulate Scenario**
 > - [ ] Understanding the Pick and Place scripts
-> - [ ] Friction - Collision sensitivity in brick (?)
+> - [ ] Collision sensitivity in brick - Friction (DENIRO was just flying away)
 > - [ ] Quaternion - Mapping the cartesian space to the joint space / Finding the right quaternion
+
+> **Milestone 03 - Building a Well using DENIRO (Iteration 1)**
+> - [ ] Well Plan and Brick Positions
+> - [ ] IK Motion Planning
+> - [ ] 
+
+> **Milestone 04 - Building a Well Optimised (Iteration 2)**
+> - [ ] Image Perception for the Spawn Location
+> - [ ] Enhancing Motion Planning
+>   - [ ] Order of Brick Placement to Avoid Collisions
+>   - [ ] Curvature in the Motion Planning
+> - [ ] Enhancing Speed: Simultaneous Placement of Bricks
+> - [ ] Error Detection and Failure Recovery: Force Sensing
+> - [ ] Redundancy Reduction
 
 ### 02 Project Specifications and Requirements
 
