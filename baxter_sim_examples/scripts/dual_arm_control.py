@@ -1,67 +1,5 @@
 #!/usr/bin/env python
 
-
-
-# Copyright (c) 2013-2015, Rethink Robotics
-
-# All rights reserved.
-
-#
-
-# Redistribution and use in source and binary forms, with or without
-
-# modification, are permitted provided that the following conditions are met:
-
-#
-
-# 1. Redistributions of source code must retain the above copyright notice,
-
-#    this list of conditions and the following disclaimer.
-
-# 2. Redistributions in binary form must reproduce the above copyright
-
-#    notice, this list of conditions and the following disclaimer in the
-
-#    documentation and/or other materials provided with the distribution.
-
-# 3. Neither the name of the Rethink Robotics nor the names of its
-
-#    contributors may be used to endorse or promote products derived from
-
-#    this software without specific prior written permission.
-
-#
-
-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-
-# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-
-# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-
-# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-
-# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-
-# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-
-# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-
-# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-
-# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-
-# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-
-# POSSIBILITY OF SUCH DAMAGE.
-
-
-
-"""
-
-Baxter RSDK Inverse Kinematics Pick and Place Demo
-
-"""
-
 import argparse
 
 import struct
@@ -77,6 +15,8 @@ import time
 from trial import calculate_brick_locations
 
 import numpy as np
+
+import threading
 
 
 
@@ -330,11 +270,10 @@ class PickAndPlace(object):
 
         self._guarded_move_to_joint_position(joint_angles)
 
-		
-	def move_to(self,pose):
-	
-		self._servo_to_pose(pose)
-	
+    def move(self, pose):
+        self._approach(pose)
+        self._servo_to_pose(pose)
+
     def pick(self, pose):
 
         # open the gripper
@@ -443,33 +382,33 @@ def load_gazebo_models(table_pose=Pose(position=Point(x=0.8, y=0.4, z=0.0)),
 
 def load_brick(idx,brick_pose=Pose(position=Point(x=0.7, y=0, z=0.8210)),brick_reference_frame="world"):
 
-	model_path = rospkg.RosPack().get_path('baxter_sim_examples')+"/models/"
+    model_path = rospkg.RosPack().get_path('baxter_sim_examples')+"/models/"
 
 
 
-	brick_xml = ''
+    brick_xml = ''
 
 
 
-	with open (model_path + "block/model.urdf", "r") as brick_file:
+    with open (model_path + "block/model.urdf", "r") as brick_file:
 
-		brick_xml=brick_file.read().replace('\n', '')
+        brick_xml=brick_file.read().replace('\n', '')
 
     # Spawn Table SDF
 
-	rospy.wait_for_service('/gazebo/spawn_sdf_model')
+    rospy.wait_for_service('/gazebo/spawn_sdf_model')
 
-	try:
+    try:
 
-		spawn_urdf = rospy.ServiceProxy('/gazebo/spawn_urdf_model', SpawnModel)
+        spawn_urdf = rospy.ServiceProxy('/gazebo/spawn_urdf_model', SpawnModel)
 
-		resp_urdf = spawn_urdf("%s" %(idx), brick_xml, "/",
+        resp_urdf = spawn_urdf("%s" %(idx), brick_xml, "/",
 
                                brick_pose, brick_reference_frame)
 
-	except rospy.ServiceException, e:
+    except rospy.ServiceException, e:
 
-		rospy.logerr("Spawn SDF service call failed: {0}".format(e))
+        rospy.logerr("Spawn SDF service call failed: {0}".format(e))
 
 
 
@@ -505,39 +444,39 @@ def load_table(table_pose=Pose(position=Point(x=1, y=0.0, z=0.0)),
 
 def load_brick_position(idx,brick_locations):
 
-	brick_pose = Pose(position=Point(x=brick_locations[idx,0], y=brick_locations[idx,1], z=brick_locations[idx,2]),orientation=Quaternion(x=brick_locations[idx,3],y=brick_locations[idx,4],z=brick_locations[idx,5],w=brick_locations[idx,6]))
+    brick_pose = Pose(position=Point(x=brick_locations[idx,0], y=brick_locations[idx,1], z=brick_locations[idx,2]),orientation=Quaternion(x=brick_locations[idx,3],y=brick_locations[idx,4],z=brick_locations[idx,5],w=brick_locations[idx,6]))
 
 
 
-	brick_reference_frame="world"
+    brick_reference_frame="world"
 
-	model_path = rospkg.RosPack().get_path('baxter_sim_examples')+"/models/"
-
-
-
-	brick_xml = ''
+    model_path = rospkg.RosPack().get_path('baxter_sim_examples')+"/models/"
 
 
 
-	with open (model_path + "block/model.urdf", "r") as brick_file:
+    brick_xml = ''
 
-		brick_xml=brick_file.read().replace('\n', '')
+
+
+    with open (model_path + "block/model.urdf", "r") as brick_file:
+
+        brick_xml=brick_file.read().replace('\n', '')
 
     # Spawn Table SDF
 
-	rospy.wait_for_service('/gazebo/spawn_sdf_model')
+    rospy.wait_for_service('/gazebo/spawn_sdf_model')
 
-	try:
+    try:
 
-		spawn_urdf = rospy.ServiceProxy('/gazebo/spawn_urdf_model', SpawnModel)
+        spawn_urdf = rospy.ServiceProxy('/gazebo/spawn_urdf_model', SpawnModel)
 
-		resp_urdf = spawn_urdf("%s" %(idx), brick_xml, "/",
+        resp_urdf = spawn_urdf("%s" %(idx), brick_xml, "/",
 
                                brick_pose, brick_reference_frame)
 
-	except rospy.ServiceException, e:
+    except rospy.ServiceException, e:
 
-		rospy.logerr("Spawn SDF service call failed: {0}".format(e))
+        rospy.logerr("Spawn SDF service call failed: {0}".format(e))
 
 
 
@@ -563,84 +502,25 @@ def delete_gazebo_models():
 
         rospy.loginfo("Delete Model service call failed: {0}".format(e))
 
-
+exitFlag = 0
+class myThread (threading.Thread):
+    def __init__(self, threadID):
+        threading.Thread.__init__(self)
+        self.threadID = threadID
+    def run(self):
+        if self.threadID == 1:
+            master_l()
+        else:
+            master_r()
 
 def main():
 
-    """RSDK Inverse Kinematics Pick and Place Example
-
-
-
-    A Pick and Place example using the Rethink Inverse Kinematics
-
-    Service which returns the joint angles a requested Cartesian Pose.
-
-    This ROS Service client is used to request both pick and place
-
-    poses in the /base frame of the robot.
-
-
-
-    Note: This is a highly scripted and tuned demo. The object location
-
-    is "known" and movement is done completely open loop. It is expected
-
-    behavior that Baxter will eventually mis-pick or drop the block. You
-
-    can improve on this demo by adding perception and feedback to close
-
-    the loop.
-
-    """
-
     rospy.init_node("ik_pick_and_place_demo")
-
-    # Load Gazebo Models via Spawning Services
-
-    # Note that the models reference is the /world frame
-
-    # and the IK operates with respect to the /base frame
-
-    brick_locations = calculate_brick_locations()
-
-    #load_brick(1)
-
-    load_gazebo_models()
-
-    #load_table()
-
-    #for i in range(len(brick_locations)):
-
-    	#pose = Pose(
-
-        #position=Point(x=brick_locations[i,0], y=brick_locations[i,1], z=brick_locations[i,2]),
-
-        #orientation=Quaternion(x=brick_locations[i,3],y=brick_locations[i,4],z=brick_locations[i,5],w=brick_locations[i,6]))
-
-    	#pnp.pick(spwan_loc)
-
-    	#pnp.place(pose)
-
-    	#load_brick_position(i,brick_locations)
-
-    #	time.sleep(0.5)
-
-    #while not rospy.is_shutdown():
-
-    # Remove models from the scene on shutdown
-
-    rospy.on_shutdown(delete_gazebo_models)
-
-
-
-    # Wait for the All Clear from emulator startup
 
     rospy.wait_for_message("/robot/sim/started", Empty)
 
-
-
     left_arm = 'left'
-	right_arm = 'right'
+    right_arm = 'right'
 
     hover_distance = 0.10# meters
 
@@ -659,8 +539,8 @@ def main():
                              'left_s0': -0.08000397926829805+0.5,
 
                              'left_s1': -0.9999781166910306-0.5}
-	
-	right_starting_joint= {'right_w0': 0.6699952259595108,
+
+    right_starting_joint= {'right_w0': 0.6699952259595108,
 
                              'right_w1': 1.030009435085784,
 
@@ -674,17 +554,8 @@ def main():
 
                              'right_s1': -0.9999781166910306-0.5}
 
-
     pnp_l = PickAndPlace(left_arm, hover_distance)
-	pnp_r = PickAndPlace(right_arm, hover_distance)
-
-
-
-    #q = quaternion_from_euler(1.5707, 0, 0)
-
-    #print("The quaternion representation is %s %s %s %s." % (q[0], q[1], q[2], q[3]))
-
-    # An orientation for gripper fingers to be overhead and parallel to the obj
+    pnp_r = PickAndPlace(right_arm, hover_distance)
 
     overhead_orientation = Quaternion(
 
@@ -695,7 +566,7 @@ def main():
                              z=0.00737916180073,
 
                              w=0.00486450832011)
-	#left RPY: (x=-179.282, y=5.615, z= 177.089)
+    #left RPY: (x=-179.282, y=5.615, z= 177.089)
 
     #orig = np.array([0.0249590815779,0.999649402929,0.00737916180073,0.00486450832011])
 
@@ -709,105 +580,26 @@ def main():
 
         orientation= overhead_orientation)
 
-    #print(brick_locations)
+    #pnp.move_to_start(starting_joint_angles)
+    global master_l
+    def master_l():
+        pnp_l.move_to_start(left_starting_joint)
+        pnp_l.move(spwan_loc)
+    global master_r
+    def master_r():
+        pnp_r.move_to_start(right_starting_joint)
+        pnp_r.move(spwan_loc)
 
+    thread1 = myThread(1)
+    thread2 = myThread(2)
 
+    thread1.start()
+    thread2.start()
 
-    # The Pose of the block in its initial location.
-
-    # You may wish to replace these poses with estimates
-
-    # from a perception node.
-
-    '''
-
-    block_poses.append(Pose(
-
-        position=Point(x=0.0, y=0.2, z=0.3),#-0.129),
-
-        orientation=overhead_orientation))
-
-    # Feel free to add additional desired poses for the object.
-
-    # Each additional pose will get its own pick and place.
-
-    block_poses.append(Pose(
-
-        position=Point(x=0.0, y=0.2, z=0.3),
-
-        orientation=overhead_orientation))
-
-    '''
-
-    #block_poses.append(Pose(
-
-    #    position=Point(x=0.7, y=0.0+0.097, z=0.169),#-0.129),
-
-    #    orientation=overhead_orientation))
-
-        
-
-    # Feel free to add additional desired poses for the object.
-
-    # Each additional pose will get its own pick and place.
-
-    
-
-    # Move to the desired starting angles
-
-    
-
-    pnp.move_to_start(starting_joint_angles)
-
-    #idx=0
-
-    #print(brick_locations)
-
-    for i in range(len(brick_locations)):
-
-    	pose = Pose(
-
-        position=Point(x=brick_locations[i,0], y=brick_locations[i,1], z=brick_locations[i,2]),
-
-        orientation=Quaternion(x=brick_locations[i,3],y=brick_locations[i,4],z=brick_locations[i,5],w=brick_locations[i,6]))
-
-        print("Placing brick ",i)
-
-        print("Location to be placed:",pose)
-
-    	pnp.pick(spwan_loc)
-
-    	pnp.place(pose)
-
-    	load_brick(i)
-
-    #while not rospy.is_shutdown():
-
-    #	load_brick(idx)
-
-   # 	idx = (idx+1)
-
-   # 	print(idx)
-
-    '''while not rospy.is_shutdown():
-
-        print("\nPicking...")
-
-        pnp.pick(block_poses[idx])
-
-        print("\nPlacing...")
-
-        idx = (idx+1) % len(block_poses)
-
-        pnp.place(block_poses[idx])
-
-        load_brick()
-
-    '''
+    #thread.start_new_thread(pnp_l.move,(spwan_loc, ))
+    #thread.start_new_thread(pnp_r.move,(spwan_loc, ))
 
     return 0
-
-
 
 if __name__ == '__main__':
 
