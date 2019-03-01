@@ -12,8 +12,10 @@
 
         #check if the brick has been gripped, if not, repeat grip process
         gripped = False
+        gripcount = 0
         while gripped == False:
-            if self._gripper.position() < 55:
+            gripcount += 1 
+            if self._gripper.position() < 55 and gripcount < 3:
                 self.gripper_open()
                 rospy.sleep(3)
                 self.gripper_close()
