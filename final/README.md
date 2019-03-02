@@ -17,6 +17,6 @@ change BOTH "l_finger_slot='2'" to "l_finger_slot='4'"
 ## To run the .py code:
 ~$ roslaunch baxter_gazebo baxter_world.launch
 
-~$ cd *to the directory of the .py code*
+~$ cd "*to the directory of the .py code*"
 
-~$ python *the code.py*
+~$ python "*the code.py*"
