@@ -15,10 +15,12 @@
         gripcount = 0
         while gripped == False:
             gripcount += 1 
-            if self._gripper.position() < 55 and gripcount < 3:
+            if self._gripper.position() < 40 and gripcount < 3:
                 self.gripper_open()
                 rospy.sleep(3)
                 self.gripper_close()
                 rospy.sleep(1)
             else:
                 gripped = True
+
+        self._retract()
