@@ -31,6 +31,7 @@
 Baxter RSDK Inverse Kinematics Pick and Place Demo
 """
 import argparse
+import os
 import struct
 import sys
 import copy
@@ -319,7 +320,7 @@ def main():
         print("Location to be placed:",pose)
         pnp.move_to(focus_loc)
 
-        image= 'TAKE A PICKTURE'
+        image= os.system('python take_photo_l1.py')
 
         dx, dy, theta= brickbois(image)
 
