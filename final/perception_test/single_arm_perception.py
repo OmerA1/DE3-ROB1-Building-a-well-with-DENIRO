@@ -322,7 +322,7 @@ def main():
 	
 	os.system('rosrun image_view image_view image:=/camera/rgb/image_raw _filename_format:="/grasping_ws/src/baxter_simulator/baxter_sim_examples/scripts/l%1i.jpg"')
 
-        image= os.system('python take_photo_l1.py') # use the camera in the arm to take a picture
+	os.system('python take_photo_l1.py') # use the camera in the arm to take a picture
 
         dx, dy, theta= brick_boi(image) # process the image to find the brick's offset relative to the picture frame
 
