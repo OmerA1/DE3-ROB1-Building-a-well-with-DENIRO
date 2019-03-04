@@ -319,6 +319,8 @@ def main():
         print("Placing brick ",i)
         print("Location to be placed:",pose)
         pnp.move_to(focus_loc)	# end effector moves to the top of the centre of brick spawn area
+	
+	os.system('rosrun image_view image_view image:=/camera/rgb/image_raw _filename_format:="/grasping_ws/src/baxter_simulator/baxter_sim_examples/scripts/l%1i.jpg"')
 
         image= os.system('python take_photo_l1.py') # use the camera in the arm to take a picture
 
