@@ -239,6 +239,9 @@ class PickAndPlace(object):
             self._servo_to_pose(stop_point)
         # servo to pose
         self._servo_to_pose(pose)
+        current_pose = self._limb.endpoint_pose()
+        if current_pose['position'].x != pose.position.x:
+            self.servo_to_pose(pose)
         # open the gripper
         self.gripper_open()
         # retract to clear object
