@@ -177,20 +177,17 @@ class PickAndPlace(object):
         self.gripper_close()
         gripped = False
         gripcount = 0
-
+        #print(self._gripper.position())
         while gripped == False:
-            print("Failed to grip, trying again...")
-            gripcount += 1 
-
-            if self._gripper.position() < 30 and gripcount < 3:
+            #print("Failed to grip, trying again...")
+            gripcount += 1
+            if self._gripper.position() < 4.5 and gripcount < 2:
                 self.gripper_open()
-                rospy.sleep(3)
+                time.sleep(5)
                 self.gripper_close()
-                rospy.sleep(1)
-
+                time.sleep(1)
             else:
                 gripped = True
-
         self._retract()
 
     def place(self, pose):
