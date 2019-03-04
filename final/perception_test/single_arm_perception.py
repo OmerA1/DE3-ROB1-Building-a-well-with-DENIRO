@@ -320,9 +320,10 @@ def main():
         print("Location to be placed:",pose)
         pnp.move_to(focus_loc)	# end effector moves to the top of the centre of brick spawn area
 	
-	os.system('rosrun image_view image_view image:=/camera/rgb/image_raw _filename_format:="/grasping_ws/src/baxter_simulator/baxter_sim_examples/scripts/l%1i.jpg"')
+	#os.system('rosrun image_view image_view image:=/camera/rgb/image_raw _filename_format:="/grasping_ws/src/baxter_simulator/baxter_sim_examples/scripts/l%1i.jpg"')
 
 	os.system('python take_photo_l1.py') # use the camera in the arm to take a picture
+	image=cv2.imread('/camera/image/l1.jpg')
 
         dx, dy, theta= brick_boi(image) # process the image to find the brick's offset relative to the picture frame
 
