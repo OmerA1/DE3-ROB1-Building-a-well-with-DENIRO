@@ -199,6 +199,11 @@ class PickAndPlace(object):
     def pick(self, pose):
         # open the gripper
         self.gripper_open()
+        
+        current_loc = self._limb.endpoint_pose()
+        current_loc['position'].y = 0.1
+        
+        self._servo_to_pose(current_loc)
         # servo above pose
         self._approach(pose)
         # servo to pose
@@ -227,7 +232,7 @@ class PickAndPlace(object):
 
     def place(self, pose):
 
-        start = [0.75, 0, 0.04]
+        start = [0.75, 0, -0.17]
         end = [pose.position.x, pose.position.y, pose.position.z]
 
         path = plan_path(start, end)
