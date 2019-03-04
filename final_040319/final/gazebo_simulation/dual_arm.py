@@ -196,30 +196,55 @@ class PickAndPlace(object):
         self._approach(pose)
         self._servo_to_pose(pose)
 
-    def pick(self, pose):
+        def pick(self, pose):
+
         # open the gripper
+
         self.gripper_open()
+
         # servo above pose
+
         self._approach(pose)
+
         # servo to pose
+
         self._servo_to_pose(pose)
+
         # close gripper
+
         self.gripper_close()
+
         gripped = False
+
         gripcount = 0
 
-        while gripped == False:
-            print("Failed to grip, trying again...")
-            gripcount += 1 
+        print(self._gripper.position())
 
-            if self._gripper.position() < 30 and gripcount < 3:
+        while gripped == False:
+
+            print("Failed to grip, trying again...")
+
+            gripcount += 1
+
+
+
+            if self._gripper.position() < 4.5 and gripcount < 2:
+
                 self.gripper_open()
-                time.sleep(3)
+
+                time.sleep(5)
+
                 self.gripper_close()
+
                 time.sleep(1)
 
+
+
             else:
+
                 gripped = True
+
+
 
         self._retract()
 
