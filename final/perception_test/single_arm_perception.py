@@ -318,16 +318,17 @@ def main():
         orientation=Quaternion(x=brick_locations[i,3],y=brick_locations[i,4],z=brick_locations[i,5],w=brick_locations[i,6]))
         print("Placing brick ",i)
         print("Location to be placed:",pose)
-        pnp.move_to(focus_loc)
+        pnp.move_to(focus_loc)	# end effector moves to the top of the centre of brick spawn area
 
-        image= os.system('python take_photo_l1.py')
+        image= os.system('python take_photo_l1.py') # use the camera in the arm to take a picture
 
-        dx, dy, theta= brickbois(image)
+        dx, dy, theta= brick_boi(image) # process the image to find the brick's offset relative to the picture frame
 
         spwan_loc= Point(
         position=Point(x=focus_loc.position.x+dx, y=focus_loc.position.y+dy, z=focus_loc.position.z),
-        orientation=quaternion_multiply(quaternion_from_euler(0,0,theta),focus_loc.orientation))
-    	pnp.pick(spwan_loc)
+        orientation=quaternion_multiply(quaternion_from_euler(0,0,theta),focus_loc.orientation)) # normalise the end effector to the brick
+	
+    	pnp.pick(spwan_loc) # pick and place
     	pnp.place(pose)
     	#load_brick(i)
 
